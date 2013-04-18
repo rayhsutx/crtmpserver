@@ -1,6 +1,7 @@
 # OS generated files #
 ######################
 .svn/
+*.o
 .DS_Store
 .DS_Store?
 ._*

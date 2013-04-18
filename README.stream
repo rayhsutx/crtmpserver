@@ -1,0 +1,39 @@
+Download source codes
+======================
+
+git clone https://github.com/rayhsutx/crtmpserver.git
+
+Compile and Run
+================
+
+Linux, Mac OSX
+------
+
+	cd crtmpserver/builders/cmake
+	./run
+
+Windows
+--------
+
+	Open crtmpserver/builders/VS2010/VS2010.sln with Visual Sutdio C++ 2012
+	Build project with 'Release Configuration'
+
+Send command to crtmpserver to pull external stream
+===================================================
+
+	* Method 1: using CLI
+	connect to crtmpserver with port 1112
+	send command (or you can test command by telnet):
+
+		add uri=rtsp://xxx.xxx.xxx/xx streamName=your_stream_name\r\n
+		(NOTE: should be end with \r\n)
+
+	* Method 2: send live flv streaming
+
+		connect to crtmpserver with port 6666
+		start sending flv streaming with metadata 'streamName=your_stream_name'
+
+How does client play RTMP stream
+================================
+
+connect to rtmp://crtmpserver_address/live/your_stream_name

@@ -439,7 +439,7 @@ bool OutboundConnectivity::FeedData(MSGHDR &message, double pts, double dts,
 			sockaddr_in &rtcpAddress = isAudio ? _rtpClient.audioRtcpAddress : _rtpClient.videoRtcpAddress;
 			_rtcpMessage.MSGHDR_MSG_NAME = (sockaddr *) & rtcpAddress;
 #ifdef WIN32
-                        _amountSent = SENDMSG(rtcpFd, &_rtcpMessage, 0, _dummyValue);
+            _amountSent = SENDMSG(rtcpFd, &_rtcpMessage, 0, _dummyValue);
 #else
 			_amountSent = SENDMSG(rtcpFd, &_rtcpMessage, 0, &_dummyValue);
 #endif
