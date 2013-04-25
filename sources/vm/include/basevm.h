@@ -22,10 +22,8 @@
 #define	_BASEVM_H
 
 #include "common.h"
-#ifdef WIN32
 #include "lua.h"
 #include "lauxlib.h"
-#endif
 
 class DLLEXP BaseVM {
 private:

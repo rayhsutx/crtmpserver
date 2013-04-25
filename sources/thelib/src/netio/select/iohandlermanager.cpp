@@ -240,13 +240,44 @@ bool IOHandlerManager::Pulse() {
 
 	//3. do the select
 	RESET_TIMER(_timeout, 1, 0);
-	int32_t count = select(MAP_KEY(--_fdState.end()) + 1, &_readFdsCopy, &_writeFdsCopy, NULL, &_timeout);
+	/*int32_t count = select(MAP_KEY(--_fdState.end()) + 1, &_readFdsCopy, &_writeFdsCopy, NULL, &_timeout);
 	if (count < 0) {
 		int err = LASTSOCKETERROR;
 		if (err == EINTR)
 			return true;
 		FATAL("Unable to do select: %d", err);
 		return false;
+	}*/
+
+	int32_t count = select(MAP_KEY(--_fdState.end()) + 1,
+		&_readFdsCopy, &_writeFdsCopy, NULL, &_timeout);
+
+	if (count < 0)
+	{
+		FATAL("Unable to do select: %d", LASTSOCKETERROR);
+
+		int err;
+		int errlen = sizeof(err);
+
+		for(u_int i=0;i <_readFdsCopy.fd_count;i++){
+			if (FD_ISSET(_readFdsCopy.fd_array[i],&_readFdsCopy))
+				if (getsockopt(_readFdsCopy.fd_array[i], SOL_SOCKET, SO_ERROR,
+					(char*)&err, &errlen) == -1){
+						FATAL("Socket #%d read error.", _readFdsCopy.fd_array[i]);
+						FD_CLR(_readFds.fd_array[i], &_readFds);
+				}
+		}
+
+		for(u_int i=0;i <_writeFdsCopy.fd_count;i++){
+			if (FD_ISSET(_writeFdsCopy.fd_array[i],&_writeFdsCopy))
+				if (getsockopt(_writeFdsCopy.fd_array[i], SOL_SOCKET, SO_ERROR,
+					(char*)&err, &errlen) == -1){
+						FATAL("Socket #%d write error.", _writeFdsCopy.fd_array[i]);
+						FD_CLR(_writeFds.fd_array[i], &_writeFds);
+				}
+		}
+
+		return true;
 	}
 
 	int32_t nextVal = _pTimersManager->TimeElapsed();

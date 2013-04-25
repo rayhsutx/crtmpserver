@@ -105,6 +105,10 @@ configuration=
 			description="FLV Playback Sample",
 			name="flvplayback",
 			protocol="dynamiclinklibrary",
+            keyframeSeek=false,
+            seekGranularity=0.1,
+            clientSideBuffer=0,
+            enableCheckBandwidth=true,
 			aliases=
 			{
 				"simpleLive",
@@ -142,9 +146,10 @@ configuration=
 			externalStreams = 
 			{
                --[[{
-                    uri="rtsp://localhost:8554/?d=59&c=1&m=6&s=abc",
+                    -- uri="rtsp://220.132.131.70:8554/v01",
+                    uri="rtsp://220.136.210.221:8554/v01",
                     localStreamName="test_flv",
-                    forceTcp=true
+                    forceTcp=false
                 }]]--
 				--[[
 				{

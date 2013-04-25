@@ -137,7 +137,9 @@ typedef long long int int64_t;*/
 #define MSG_NOSIGNAL 0
 #define READ_FD _read
 #define WRITE_FD _write
-#define CLOSE_SOCKET(fd) do{ if(fd>=0) closesocket(fd);fd=(SOCKET)-1;}while(0)
+//#define CLOSE_SOCKET(fd) do{ if(fd>=0) closesocket(fd);fd=(SOCKET)-1;}while(0)
+#define CLOSE_SOCKET(fd) closesocket(fd); \
+        fd = INVALID_SOCKET; 
 #define LASTSOCKETERROR WSAGetLastError()
 #define SOCKERROR_EINPROGRESS			WSAEINPROGRESS
 #define SOCKERROR_EAGAIN				WSAEWOULDBLOCK

@@ -48,6 +48,8 @@ bool HTTPBufferProtocol::SignalInputData(int32_t recvAmount) {
 }
 
 bool HTTPBufferProtocol::SignalInputData(IOBuffer &buffer) {
+		//seems there're some erros for windows, just comment them out and waits for official update from crtmpserver
+#if 0
 	//1. Get the context
 	ClientContext *pContext = GetContext();
 	if (pContext == NULL) {
@@ -103,6 +105,9 @@ bool HTTPBufferProtocol::SignalInputData(IOBuffer &buffer) {
 	}
 
 	return true;
+#else
+	return false;
+#endif
 }
 
 bool HTTPBufferProtocol::TransferCompleted() {

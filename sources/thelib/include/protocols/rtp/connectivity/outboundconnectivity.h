@@ -83,9 +83,7 @@ private:
 	uint8_t *_pRTCPSOC;
 	uint64_t _startupTime;
 	RTPClient _rtpClient;
-#ifdef WIN32
 	LPDWORD _dummyValue;
-#endif
 
 	bool _hasVideo;
 	SOCKET _videoDataFd;

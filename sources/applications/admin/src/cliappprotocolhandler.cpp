@@ -63,7 +63,7 @@ bool CLIAppProtocolHandler::ProcessMessage(BaseProtocol *pFrom, Variant &message
 			streamConfigs.IsArray(false);
 			streamConfigs["uri"] = uri;
 			streamConfigs["localStreamName"] = streamName;
-			streamConfigs["forceTcp"] = false;
+			streamConfigs["forceTcp"] = true;
 
 			if (application->PullExternalStream(streamConfigs))
 			{

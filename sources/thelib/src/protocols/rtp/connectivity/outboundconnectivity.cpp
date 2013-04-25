@@ -438,11 +438,7 @@ bool OutboundConnectivity::FeedData(MSGHDR &message, double pts, double dts,
 			SOCKET rtcpFd = isAudio ? _audioRTCPFd : _videoRTCPFd;
 			sockaddr_in &rtcpAddress = isAudio ? _rtpClient.audioRtcpAddress : _rtpClient.videoRtcpAddress;
 			_rtcpMessage.MSGHDR_MSG_NAME = (sockaddr *) & rtcpAddress;
-#ifdef WIN32
             _amountSent = SENDMSG(rtcpFd, &_rtcpMessage, 0, _dummyValue);
-#else
-			_amountSent = SENDMSG(rtcpFd, &_rtcpMessage, 0, &_dummyValue);
-#endif
 			if (_amountSent < 0) {
 				FATAL("Unable to send message");
 				return false;

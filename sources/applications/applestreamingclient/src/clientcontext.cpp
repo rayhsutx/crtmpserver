@@ -31,6 +31,7 @@
 #include "protocols/ts/inboundtsprotocol.h"
 #include "streaming/basestream.h"
 #include "streaming/streamsmanager.h"
+#include "streaming/codectypes.h"
 #include "protocols/ts/innettsstream.h"
 #include "applestreamingclientapplication.h"
 #include "protocols/timer/finetimer.h"
@@ -309,6 +310,7 @@ bool ClientContext::FetchChildPlaylist(string uri, uint32_t bw) {
 }
 
 bool ClientContext::ConsumeAVBuffer() {
+#ifdef APPLE_TS
 	//1. initialize _lastFeedTime
 	if (_lastWallClock == 0) {
 #ifdef HAS_MS_TIMER
@@ -400,6 +402,9 @@ bool ClientContext::ConsumeAVBuffer() {
 
 	//7. Done
 	return true;
+#else
+	return false;
+#endif
 }
 
 uint32_t ClientContext::GetOptimalBw() {
