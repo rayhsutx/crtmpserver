@@ -33,6 +33,15 @@ Send command to crtmpserver to pull external stream
 		connect to crtmpserver with port 6666
 		start sending flv streaming with metadata 'streamName=your_stream_name'
 
+Delete an existing stream
+=========================
+
+send command:
+    delete streamName=[your existing stream name]\r\n
+
+or add a new stream with same stream name
+    CLI will remove the existing stream automatically if stream exists
+
 How does client play RTMP stream
 ================================
 
