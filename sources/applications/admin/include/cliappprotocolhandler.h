@@ -32,6 +32,8 @@ namespace app_admin {
 		virtual ~CLIAppProtocolHandler();
 
 		virtual bool ProcessMessage(BaseProtocol *pFrom, Variant &message);
+	private:
+		virtual void RemoveStreamByName(string &streamName);
 	};
 }
 

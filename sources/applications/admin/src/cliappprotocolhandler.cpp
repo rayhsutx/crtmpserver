@@ -18,6 +18,8 @@
  */
 
 #include "application/clientapplicationmanager.h"
+#include "streaming/streamsmanager.h"
+#include "streaming/basestream.h"
 
 #ifdef HAS_PROTOCOL_CLI
 #include "cliappprotocolhandler.h"
@@ -65,6 +67,12 @@ bool CLIAppProtocolHandler::ProcessMessage(BaseProtocol *pFrom, Variant &message
 			streamConfigs["localStreamName"] = streamName;
 			streamConfigs["forceTcp"] = true;
 
+			if (!application->GetStreamsManager()->StreamNameAvailable(streamName))
+			{
+				WARN("%s has already taken, remove it !!", STR(streamName));
+				RemoveStreamByName(streamName);
+			}
+
 			if (application->PullExternalStream(streamConfigs))
 			{
 				INFO("added external stream %s", STR(uri));
@@ -81,6 +89,20 @@ bool CLIAppProtocolHandler::ProcessMessage(BaseProtocol *pFrom, Variant &message
 			}
 		}
 	}
+	else if (command == "delete")
+	{
+		if (!hasParameters)
+			return SendFail(pFrom, "no parameters");
+		if (params.HasKey("streamName") == false)
+			return SendFail(pFrom, "no stream name");
+
+		string streamName = params["streamName"];
+		if (streamName.size() == 0)
+			return SendFail(pFrom, "invalid stream name");
+
+		RemoveStreamByName(streamName);
+		return SendSuccess(pFrom, "OK", message);
+	}
 	else if (command == "exit")
 	{
 		pFrom->EnqueueForDelete();
@@ -88,5 +110,26 @@ bool CLIAppProtocolHandler::ProcessMessage(BaseProtocol *pFrom, Variant &message
 	}
 
 	return SendFail(pFrom, "Unknown command");
+}
+
+void CLIAppProtocolHandler::RemoveStreamByName(string &streamName)
+{
+	BaseClientApplication* application = ClientApplicationManager::FindAppByName("flvplayback");
+	if (application != NULL)
+	{
+		StreamsManager* sm = application->GetStreamsManager();
+		map<uint32_t, BaseStream *> streams = sm->FindByName(streamName);
+
+		if (streams.size() != 0)
+		{
+			FOR_MAP(streams, uint32_t, BaseStream*, i)
+			{
+				BaseStream* s = MAP_VAL(i);
+				sm->UnRegisterStream(s);
+				if (!s->IsEnqueueForDelete())
+					s->EnqueueForDelete();
+			}
+		}
+	}
 }
 #endif	/* HAS_PROTOCOL_CLI */
